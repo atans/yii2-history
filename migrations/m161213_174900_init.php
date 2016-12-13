@@ -1,6 +1,5 @@
 <?php
 
-
 class m161213_174900_init extends \atans\history\migrations\Migration
 {
     public function up()

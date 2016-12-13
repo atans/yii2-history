@@ -5,7 +5,9 @@ class m161213_174900_init extends \atans\history\migrations\Migration
 {
     public function up()
     {
-        $this->createTable('{{%activerecord_history}}', [
+        $tableName = \atans\hisotry\models\History::tableName();
+
+        $this->createTable($tableName, [
             'id'         => $this->primaryKey(),
             'table'      => $this->string(50)->notNull(),
             'event'      => $this->string(50)->notNull(),
@@ -17,15 +19,15 @@ class m161213_174900_init extends \atans\history\migrations\Migration
             'created_at' => $this->dateTime()->notNull(),
         ], $this->tableOptions);
 
-        $this->createIndex('table', '{{%activerecord_history}}', ['table']);
-        $this->createIndex('event', '{{%activerecord_history}}', ['event']);
-        $this->createIndex('scenario', '{{%activerecord_history}}', ['scenario']);
-        $this->createIndex('key', '{{%activerecord_history}}', ['key']);
-        $this->createIndex('created_by', '{{%activerecord_history}}', ['created_by']);
+        $this->createIndex('table', $tableName, ['table']);
+        $this->createIndex('event', $tableName, ['event']);
+        $this->createIndex('scenario', $tableName, ['scenario']);
+        $this->createIndex('key', $tableName, ['key']);
+        $this->createIndex('created_by', $tableName, ['created_by']);
     }
 
     public function down()
     {
-        $this->dropTable('{{%activerecord_history}}');
+        $this->dropTable(\atans\hisotry\models\History::tableName());
     }
 }

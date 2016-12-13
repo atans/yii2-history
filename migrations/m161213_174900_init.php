@@ -4,7 +4,7 @@ class m161213_174900_init extends \atans\history\migrations\Migration
 {
     public function up()
     {
-        $tableName = \atans\hisotry\models\History::tableName();
+        $tableName = \atans\hisotry\models\history::tableName();
 
         $this->createTable($tableName, [
             'id'         => $this->primaryKey(),
@@ -27,6 +27,6 @@ class m161213_174900_init extends \atans\history\migrations\Migration
 
     public function down()
     {
-        $this->dropTable(\atans\hisotry\models\History::tableName());
+        $this->dropTable(\atans\hisotry\models\history::tableName());
     }
 }

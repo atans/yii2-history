@@ -3,7 +3,7 @@
 namespace atans\history\behaviors;
 
 use Yii;
-use atans\hisotry\models\History;
+use atans\history\models\History;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\base\Exception;

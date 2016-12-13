@@ -1,6 +1,6 @@
 <?php
 
-namespace atans\hisotry\models;
+namespace atans\history\models;
 
 use Yii;
 use yii\behaviors\AttributeBehavior;

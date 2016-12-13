@@ -86,7 +86,7 @@ class HistoryBehavior extends Behavior
                 'ip'       => $ip,
             ]);
 
-            if ($history->save()) {
+            if (! $history->save()) {
                 throw new Exception('History can not save');
             }
         } catch (\Exception $e) {

@@ -10,7 +10,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer atans/yii2-history "*"
+composer require atans/yii2-history
 ```
 
 or add

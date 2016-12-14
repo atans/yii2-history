@@ -11,7 +11,6 @@ use yii\base\Exception;
 use yii\base\InvalidCallException;
 use yii\base\NotSupportedException;
 use yii\db\BaseActiveRecord;
-use yii\web\Application as WebApplication;
 
 /**
  * History Behavior

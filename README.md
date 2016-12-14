@@ -2,8 +2,9 @@ Yii2 History Extension
 ===================
 An active record history extension for yii2
 
-Installation
-------------
+# Installation
+
+### 1.Download
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
@@ -22,7 +23,39 @@ or add
 to the require section of your `composer.json` file.
 
 
-Usage
------
+### 2.Update database schema
 
-TODO
+```
+$ php yii migrate/up --migrationPath=@vendor/atans/yii2-history/migrations
+```
+
+
+# Usage
+
+```php
+
+namespace frontend\models\User;
+
+class User extends \yii\db\ActiveRecord
+{
+        /**
+         * @inheritdoc
+         */
+        public function behaviors()
+        {
+            return [
+                'history' => [
+                    'class'      => \atans\history\behaviors\HistoryBehavior::className(),
+                    
+                    // Options
+                    'allowEvents' => [..],
+                    'ignoreFields' => [...],
+                    'extraFields' => [...],
+                    'debug' => true, // Show the errors
+                ],
+            ];
+        }
+
+}
+
+```

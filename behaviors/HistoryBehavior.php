@@ -8,6 +8,7 @@ use yii\base\Behavior;
 use yii\base\ErrorException;
 use yii\base\Event;
 use yii\base\Exception;
+use yii\base\InvalidCallException;
 use yii\base\NotSupportedException;
 use yii\db\BaseActiveRecord;
 use yii\web\Application as WebApplication;
@@ -78,13 +79,14 @@ class HistoryBehavior extends Behavior
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
-            $history = new History([
-                'event'    => $event->name,
-                'table'    => $owner::TableName(),
-                'scenario' => $owner->scenario,
-                'key'      => $primaryKey,
-            ]);
 
+            $history                 = new History();
+            $history->event          = $event->name;
+            $history->table          = $owner::tableName();
+            $history->model_scenario = $owner->scenario;
+            $history->key            = $primaryKey;
+
+            // array to json
             $history->setData($data);
 
             if (! $history->save()) {
@@ -114,12 +116,10 @@ class HistoryBehavior extends Behavior
 
         $primaryKey = $owner->primaryKey();
 
-        if (count($primaryKey) == 1) {
-            $field = array_shift($primaryKey);
-
-            return $owner->$field;
+        if (isset($primaryKey[0])) {
+            return $owner->{$primaryKey[0]};
         }
 
-        throw new NotSupportedException('Composite primary key is not supported.');
+        throw new InvalidCallException('"' . $owner::className() . '" must have a primary key.');
     }
 }

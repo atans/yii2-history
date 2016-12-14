@@ -91,9 +91,29 @@ class History extends ActiveRecord
      *
      * @param $data
      */
-    public function setData($data)
+    public function setData(array $data)
     {
         $this->data = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Get data
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Get data as array
+     *
+     * @return array
+     */
+    public function getDataAsArray()
+    {
+        return json_decode($this->data);
     }
 
     /**

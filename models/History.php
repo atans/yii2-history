@@ -3,8 +3,10 @@
 namespace atans\history\models;
 
 use Yii;
+use yii\base\NotSupportedException;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
+use yii\web\Application as WebApplication;
 
 /**
  * History model
@@ -13,10 +15,12 @@ use yii\db\ActiveRecord;
  * @property string $class
  * @property string $table
  * @property string $event
- * @property string $scenario
+ * @property string $model_scenario
  * @property string $key
  * @property string $data
  * @property string $ip
+ * @property string $created_by
+ * @property string $created_at
  */
 class History extends ActiveRecord
 {
@@ -56,10 +60,8 @@ class History extends ActiveRecord
             'eventRequired'    => ['event', 'required'],
             'eventLength'      => ['event', 'string', 'max' => 50],
 
-            'scenarioRequired' => ['scenario', 'required'],
-            'scenarioLength'   => ['scenario', 'string', 'max' => 50],
-
-            'dataLength'       => ['data', 'string'],
+            'modelScenarioRequired' => ['model_scenario', 'required'],
+            'modelScenarioLength'   => ['model_scenario', 'string', 'max' => 50],
 
             'ipLength'         => ['ip', 'string', 'max' => 42],
 
@@ -73,14 +75,14 @@ class History extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'table'      => Yii::t('activerecory_history', 'Table'),
-            'event'      => Yii::t('activerecory_history', 'Event'),
-            'scenario'   => Yii::t('activerecory_history', 'Scenario'),
-            'key'        => Yii::t('activerecory_history', 'Key'),
-            'data'       => Yii::t('activerecory_history', 'Data'),
-            'ip'         => Yii::t('activerecory_history', 'IP'),
-            'created_by' => Yii::t('activerecory_history', 'Created By'),
-            'created_at' => Yii::t('activerecory_history', 'Created At'),
+            'table'      => Yii::t('history', 'Table'),
+            'event'      => Yii::t('history', 'Event'),
+            'model_scenario'   => Yii::t('history', 'Scenario'),
+            'key'        => Yii::t('history', 'Key'),
+            'data'       => Yii::t('history', 'Data'),
+            'ip'         => Yii::t('history', 'IP'),
+            'created_by' => Yii::t('history', 'Created By'),
+            'created_at' => Yii::t('history', 'Created At'),
         ];
     }
 
@@ -95,12 +97,22 @@ class History extends ActiveRecord
     }
 
     /**
-     * json to array
-     *
-     * @return array
+     * @inheritdoc
      */
-    public function getData()
+    public function beforeSave($insert)
     {
-        return json_decode($this->data);
+        if (! $this->getIsNewRecord()) {
+            throw new NotSupportedException('Update is not allowed');
+        }
+
+        if (Yii::$app instanceof WebApplication) {
+            $this->ip = Yii::$app->request->userIP;
+
+            if (! Yii::$app->user->getIsGuest() && ($userId = Yii::$app->getUser()->getId())) {
+                $this->created_by = $userId;
+            }
+        }
+
+        return parent::beforeSave($insert);
     }
 }

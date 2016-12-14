@@ -5,6 +5,7 @@ namespace atans\history\behaviors;
 use Yii;
 use atans\history\models\History;
 use yii\base\Behavior;
+use yii\base\ErrorException;
 use yii\base\Event;
 use yii\base\Exception;
 use yii\base\NotSupportedException;
@@ -16,6 +17,11 @@ use yii\web\Application as WebApplication;
  */
 class HistoryBehavior extends Behavior
 {
+    /**
+     * @var bool
+     */
+    public $debug = true;
+
     /**
      * @var array
      */
@@ -50,7 +56,8 @@ class HistoryBehavior extends Behavior
      *
      * @param Event $event
      * @throws NotSupportedException
-     * @throws \yii\db\Exception
+     * @throws Exception
+     * @throws ErrorException
      */
     public function addHistory(Event $event)
     {
@@ -71,26 +78,26 @@ class HistoryBehavior extends Behavior
         $transaction = Yii::$app->getDb()->beginTransaction();
 
         try {
-            $ip = null;
-
-            if (Yii::$app instanceof WebApplication) {
-                $ip = Yii::$app->request->userIP;
-            }
-
             $history = new History([
                 'event'    => $event->name,
                 'table'    => $owner::TableName(),
                 'scenario' => $owner->scenario,
                 'key'      => $primaryKey,
-                'data'     => $data,
-                'ip'       => $ip,
             ]);
+
+            $history->setData($data);
 
             if (! $history->save()) {
                 throw new Exception('History can not save');
             }
+
+            $transaction->commit();
         } catch (\Exception $e) {
             $transaction->rollBack();
+
+            if ($this->debug) {
+                throw new ErrorException($e->getMessage());
+            }
         }
     }
 
@@ -110,7 +117,7 @@ class HistoryBehavior extends Behavior
         if (count($primaryKey) == 1) {
             $field = array_shift($primaryKey);
 
-            return $this->owner->$field;
+            return $owner->$field;
         }
 
         throw new NotSupportedException('Composite primary key is not supported.');

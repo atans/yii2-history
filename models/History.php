@@ -29,7 +29,7 @@ class History extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%activerecord_history}}';
+        return '{{%history}}';
     }
 
     /**

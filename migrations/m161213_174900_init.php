@@ -23,7 +23,7 @@ class m161213_174900_init extends \atans\history\migrations\Migration
 
         $this->createIndex('table', $tableName, ['table']);
         $this->createIndex('event', $tableName, ['event']);
-        $this->createIndex('scenario', $tableName, ['scenario']);
+        $this->createIndex('model_scenario', $tableName, ['model_scenario']);
         $this->createIndex('key', $tableName, ['key']);
         $this->createIndex('created_by', $tableName, ['created_by']);
     }

@@ -22,6 +22,12 @@ or add
 
 to the require section of your `composer.json` file.
 
+Then run
+
+```
+composer update
+```
+
 
 ### 2.Update database schema
 

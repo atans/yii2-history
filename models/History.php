@@ -14,12 +14,12 @@ use yii\web\Application as WebApplication;
  * @property integer $id
  * @property string $class
  * @property string $table
+ * @property integer $user_id
  * @property string $event
  * @property string $model_scenario
  * @property string $key
  * @property string $data
  * @property string $ip
- * @property string $created_by
  * @property string $created_at
  */
 class History extends ActiveRecord
@@ -54,6 +54,8 @@ class History extends ActiveRecord
     public function rules()
     {
         return [
+            'userIdPattern' => ['user_id', 'integer'],
+
             'tableRequired'    => ['table', 'required'],
             'tableLength'      => ['table', 'string', 'max' => 50],
 
@@ -75,14 +77,14 @@ class History extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'table'      => Yii::t('history', 'Table'),
-            'event'      => Yii::t('history', 'Event'),
-            'model_scenario'   => Yii::t('history', 'Scenario'),
-            'key'        => Yii::t('history', 'Key'),
-            'data'       => Yii::t('history', 'Data'),
-            'ip'         => Yii::t('history', 'IP'),
-            'created_by' => Yii::t('history', 'Created By'),
-            'created_at' => Yii::t('history', 'Created At'),
+            'user_id'        => Yii::t('history', 'User ID'),
+            'table'          => Yii::t('history', 'Table'),
+            'event'          => Yii::t('history', 'Event'),
+            'model_scenario' => Yii::t('history', 'Scenario'),
+            'key'            => Yii::t('history', 'Key'),
+            'data'           => Yii::t('history', 'Data'),
+            'ip'             => Yii::t('history', 'IP'),
+            'created_at'     => Yii::t('history', 'Created At'),
         ];
     }
 
@@ -129,10 +131,18 @@ class History extends ActiveRecord
             $this->ip = Yii::$app->request->userIP;
 
             if (! Yii::$app->user->getIsGuest() && ($userId = Yii::$app->getUser()->getId())) {
-                $this->created_by = $userId;
+                $this->user_id = $userId;
             }
         }
 
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(Yii::$app->user->identityClass, ['id' => 'user_id']);
     }
 }

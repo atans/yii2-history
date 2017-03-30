@@ -11,6 +11,7 @@ class m161213_174900_init extends \atans\history\migrations\Migration
 
         $this->createTable($tableName, [
             'id'             => $this->primaryKey(),
+            'user_id'          => $this->integer()->null(),
             'table'          => $this->string(50)->notNull(),
             'event'          => $this->string(50)->notNull(),
             'model_scenario' => $this->string(50)->notNull(),
@@ -21,6 +22,7 @@ class m161213_174900_init extends \atans\history\migrations\Migration
             'created_at'     => $this->dateTime()->notNull(),
         ], $this->tableOptions);
 
+        $this->createIndex('user_id', $tableName, ['user_id']);
         $this->createIndex('table', $tableName, ['table']);
         $this->createIndex('event', $tableName, ['event']);
         $this->createIndex('model_scenario', $tableName, ['model_scenario']);
